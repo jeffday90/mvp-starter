@@ -1,29 +1,64 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-// UNCOMMENT THE DATABASE YOU'D LIKE TO USE
-// var items = require('../database-mysql');
-// var items = require('../database-mongo');
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('../database-mongo');
 
-var app = express();
+const app = express();
 
-// UNCOMMENT FOR REACT
-// app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(express.static(`${__dirname}/../react-client/dist`));
+app.use(bodyParser.json());
 
-// UNCOMMENT FOR ANGULAR
-// app.use(express.static(__dirname + '/../angular-client'));
-// app.use(express.static(__dirname + '/../node_modules'));
 
-app.get('/items', function (req, res) {
-  items.selectAll(function(err, data) {
-    if(err) {
-      res.sendStatus(500);
+// user routes
+app.get('/user', (req, res) => {
+  const credentials = {
+    username: req.query.username,
+    password: req.query.password,
+  };
+
+  db.selectUserName(credentials, (err, data) => {
+    if (err) {
+      res.send(err);
     } else {
-      res.json(data);
+      res.send(data);
     }
   });
 });
 
-app.listen(3000, function() {
-  console.log('listening on port 3000!');
+app.post('/user', (req, res) => {
+  const userInfo = req.body;
+  db.addUser(userInfo, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
 });
 
+// show routes
+app.get('/shows', (req, res) => {
+  const { username } = req.query;
+  db.getShowsAtUsername(username, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+
+app.post('/shows', (req, res) => {
+  const showInfo = req.body;
+  db.addShow(showInfo, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.listen(3000, () => {
+  console.log('listening on port 3000!');
+});

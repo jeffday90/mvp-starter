@@ -1,36 +1,41 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
-import List from './components/List.jsx';
+import Login from './components/Login.jsx'
+import FrontPage from './components/FrontPage.jsx'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      items: []
+      userInfo: [],
+      loggedIn: false,
     }
+    this.checkAuthenticatedStatusAndGrabInfo = this.checkAuthenticatedStatusAndGrabInfo.bind(this);
   }
 
-  componentDidMount() {
-    $.ajax({
-      url: '/items', 
-      success: (data) => {
-        this.setState({
-          items: data
-        })
-      },
-      error: (err) => {
-        console.log('err', err);
-      }
+  checkAuthenticatedStatusAndGrabInfo(userInfo) {
+    //TODO: there is somethign awry with new user routing... make sure to check on this
+    this.setState({
+      loggedIn: true,
+      userInfo: userInfo,
     });
   }
 
   render () {
-    return (<div>
-      <h1>Item List</h1>
-      <List items={this.state.items}/>
-    </div>)
+    const { loggedIn, userInfo } = this.state;
+    return (
+    <div style={centerizer}>
+      <h1>gigger</h1>
+      { !loggedIn && <Login checkAuthenticatedStatus={this.checkAuthenticatedStatusAndGrabInfo}/>}
+      { loggedIn && <FrontPage userInfo={this.state.userInfo}/>}
+    </div>
+    )
+
   }
+}
+
+const centerizer = {
+  textAlign: "center"
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
