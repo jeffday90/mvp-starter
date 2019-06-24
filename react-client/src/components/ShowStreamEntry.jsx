@@ -7,6 +7,9 @@ const Entry = styled.div`
     padding: 10px;
     margin-left: 100px;
     margin-right: 100px;
+    border-width: thin;
+    border-radius: 8px 8px 8px 8px;
+    border-color: #A9A9A9;
 `;
 
 // stream of content will have media widget
@@ -20,11 +23,15 @@ const videoStyle = {
 // need to figure out how to render the end point
 
 const ShowStreamEntry = (props) => {
+  // split at the end point
+  const key = props.show.links[0].split('=')[1];
+  const cleanArr = props.show.attendess;
+  console.log(key);
   return (
     <Entry>
         <h1>{props.show.artists}</h1>
           <div> at {props.show.venue}</div>
-            <iframe style={videoStyle} src="https://bandcamp.com/EmbeddedPlayer/album=dopesmoker/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/artwork=small/transparent=true/" seamless><a href={props.show.link}>{props.show.artists}</a></iframe>
+          <iframe width="360" height="205" src={`https://www.youtube.com/embed/${key}`} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           <h5>attending: {props.show.attendees}</h5>
     </Entry>
   )

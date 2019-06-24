@@ -14,7 +14,6 @@ app.get('/user', (req, res) => {
     username: req.query.username,
     password: req.query.password,
   };
-
   db.selectUserName(credentials, (err, data) => {
     if (err) {
       res.send(err);
@@ -47,6 +46,16 @@ app.get('/shows', (req, res) => {
   });
 });
 
+app.get('/getAllShows', (req, res) => {
+  db.getAllShows((err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 
 app.post('/shows', (req, res) => {
   const showInfo = req.body;
@@ -56,6 +65,17 @@ app.post('/shows', (req, res) => {
     } else {
       res.send(result);
     }
+  });
+});
+
+app.put('/shows', (req, res) => {
+  const showInfo = req.body;
+  console.log(showInfo);
+  db.addUserToShow(showInfo, (err, result) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(result);
   });
 });
 

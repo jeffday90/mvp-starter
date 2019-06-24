@@ -33,17 +33,14 @@ const showSchema = mongoose.Schema({
   month: Number,
 });
 
-// what needs to go in the show obj??
-// what artists are playing
-// date
-// venue
-
 const User = mongoose.model('User', userSchema);
 const Show = mongoose.model('Show', showSchema);
 
+
+// user operations
 const addUser = (userInfo, callback) => {
   console.log(userInfo);
-  const newUser = new Show({
+  const newUser = new User({
     firstName: userInfo.firstName,
     lastName: userInfo.lastName,
     username: userInfo.username,
@@ -56,7 +53,6 @@ const addUser = (userInfo, callback) => {
   callback(null, 'successful insertion');
 };
 
-// get user is below
 const selectUserName = (credentials, callback) => {
   const { username, password } = credentials;
   User.find({ username }, (err, items) => {
@@ -73,8 +69,7 @@ const selectUserName = (credentials, callback) => {
   });
 };
 
-
-// update operation
+// show operations
 
 const addShow = (show, callback) => {
   const showInfo = new Show({
@@ -90,7 +85,8 @@ const addShow = (show, callback) => {
 };
 
 const getShowsAtUsername = (username, callback) => {
-  Show.find({ attendees: [username] }, (err, result) => {
+  console.log(username);
+  Show.find({ attendees: { $all: [username] } }, (err, result) => {
     if (err) {
       callback(err);
     } else {
@@ -109,8 +105,21 @@ const getAllShows = (callback) => {
   });
 };
 
-// add friend
-// update operation
+const addUserToShow = (userAndShow, callback) => {
+  const { showId, username } = userAndShow;
+
+  Show.update(
+    { _id: showId },
+    { $push: { attendees: username } },
+    (err, result) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, result);
+      }
+    },
+  );
+};
 
 module.exports = {
   selectUserName,
@@ -118,4 +127,5 @@ module.exports = {
   addShow,
   getShowsAtUsername,
   getAllShows,
+  addUserToShow,
 };

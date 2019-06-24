@@ -2,15 +2,22 @@ import React from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 
-const Wrapper = styled.div`
-    margin-top: 200px;
 
+const Container = styled.div`
+  transform: scale(0.5);
+  float: right;
+  margin-top: -45px;
 `;
 
-const AddAnArtist = styled.div``;
+const Wrapper = styled.div`
+  /* margin-top: -2050px;
+  margin-left: 200px;
+  margin-right: -50px; */
+`;
 
 const AddDetails = styled.div``;
 
+const AddAnArtist = styled.div``;
 
 //TODO: make sure the state gets re-set after every show add and artist add
 
@@ -55,50 +62,54 @@ class AddShow extends React.Component {
     this.setState({
       artists: artistArr,
       links: linkArr,
-      linkStr: '',
-      artistStr: '',
+      artistSubmitted: true,
     });
-
-    // render the link
   }
 
   handleSubmit (e) {
     e.preventDefault();
-    const attendeesArr = [];
-    attendeesArr.push(this.props.currentUser[0].username)
-    const { artists, links, venue, day, month } = this.state;
-    const newShow = {
-      artists: artists,
-      attendees: attendeesArr,
-      links: links,
-      venue: venue,
-      day: day,
-      month: month,
-    }
-    Axios.post('/shows', newShow)
-      .then((result) => {
-        console.log(result);
-        this.props.grabShows();
-      })
-      .catch ((err) => {
-        console.log(err);
-      })  
+    if (this.state.artistSubmitted === true) {
+      const attendeesArr = [];
+      attendeesArr.push(this.props.currentUser[0].username)
+      const { artists, links, venue, day, month } = this.state;
+      const newShow = {
+        artists: artists,
+        attendees: attendeesArr,
+        links: links,
+        venue: venue,
+        day: day,
+        month: month,
+      }
+      Axios.post('/shows', newShow)
+        .then((result) => {
+          console.log(result);
+          this.props.grabShows();
+          this.props.grabAllShows();
+        })
+        .catch ((err) => {
+          console.log(err);
+        })  
+      }
   }
-
   // allow user to add a link to media (youtube), bandcamp, soundcloud
     // immediately render artist and media, submit when all fields are entered
 
   render () {
     return (
       <Wrapper>
-          <h3>Add an Event Here:</h3>
+        <Container>
+          <a href="https://fontmeme.com/slayer-font/"><img src="https://fontmeme.com/permalink/190624/0e55a75ae61f235afaff8a5e6abb1a0f.png" alt="slayer-font" border="0"></img></a>
+        </Container> 
           <AddAnArtist>
-          <form onSubmit={this.handleArtist}>
+            { !this.state.artistSubmitted && <div>Make sure to submit an artist!</div>}
+          <form id="artist-submit-form" onSubmit={this.handleArtist}>
             <div>
             <label>
                 Add Artist(s):
                 <input type="text" name="artistStr" onChange={this.handleChange} />
             </label>
+            </div>
+            <div>
             <label>
                 Add a link(s):
                 <input type="text" name="linkStr" onChange={this.handleChange} />
@@ -109,7 +120,7 @@ class AddShow extends React.Component {
           </AddAnArtist>
 
           <AddDetails>
-          <form onSubmit={this.handleSubmit}>
+          <form id="show-submit-form" onSubmit={this.handleSubmit}>
           <div>
           <label>
             Venue:

@@ -12,7 +12,6 @@ class FrontPage extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props.userInfo)
     this.fillUserInfo();
   }
 
@@ -26,7 +25,7 @@ class FrontPage extends React.Component {
     const { userInfo } = this.state;
     return (
       <div>
-        <div>Hello {userInfo[0].firstName}, welcome to gigger! </div>
+        <h4>Hello {userInfo[0].firstName}, welcome to Concerto! </h4>
         <Shows currentUser={userInfo}/>
       </div>
 

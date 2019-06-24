@@ -1,6 +1,40 @@
 import React from 'react';
 import NewAccount from './NewAccount.jsx'
 import Axios from 'axios';
+import styled from 'styled-components';
+
+const NewUserDiv = styled.div`
+  margin-left: 150px;
+  margin-right: 150px;
+  padding: 10px;
+  margin-bottom: 10px;
+
+`;
+
+const FormDiv = styled.div`
+  margin-left: 150px;
+  margin-right: 150px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
+
+const Wrapper = styled.div`
+  border: solid;
+  padding: 20px;
+  margin-left: 350px;
+  margin-right: 350px;
+  margin-top: 100px;
+  border-width: thin;
+  border-radius: 8px 8px 8px 8px;
+  border-color: #A9A9A9;
+
+`;
+
+const Footer = styled.div`
+  margin-top: 170px;
+`;
 
 class Login extends React.Component {
   constructor(props) {
@@ -73,22 +107,9 @@ class Login extends React.Component {
     const { newAccount, showPasswordError } = this.state;
     return (
       <div>
-      <div>
-            <div>
-              <div>Log into Gigger</div>
-                <div>
-                  { !newAccount && 
-                    <div>
-                      <div>New to Gigger?</div>
-                        <button onClick={this.makeNewAccount}>
-                            Sign Up
-                        </button>
-                    </div>
-                  }
-                </div>
-      { newAccount && <NewAccount checkAuthenticatedStatus={this.props.checkAuthenticatedStatus}/>}
+      <Wrapper>
       { !newAccount && 
-      <div>
+      <FormDiv>
           <form onSubmit={this.checkUserName}>
             <div>
               { showPasswordError && 
@@ -106,11 +127,23 @@ class Login extends React.Component {
             </div>
             <input type="submit" value="Submit"/>
           </form>
-      </div>
+      </FormDiv>
       }
+            <div>
+                <div>
+                  { !newAccount && 
+                    <NewUserDiv>
+                      <div>New to Concerto?</div>
+                        <button onClick={this.makeNewAccount}>
+                            Sign Up
+                        </button>
+                    </NewUserDiv>
+                  }
+                </div>
+      { newAccount && <NewAccount checkAuthenticatedStatus={this.props.checkAuthenticatedStatus}/>}
       </div>
-      <div>By logging in, you agree to <span className="highlight">Gigger's</span> Terms of Service and Privacy Policy.</div>
-    </div>
+    </Wrapper>
+    <Footer>By logging in, you agree to <span className="highlight">Concerto's</span> Terms of Service and Privacy Policy.</Footer>
     </div>
     )
   }
